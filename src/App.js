@@ -1,24 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import { AppProvider } from "./context";
+import Snake from "./components/Snake";
+import Food from "./components/Food";
+import PlayingField from "./components/PlayingField";
+import Controllers from "./components/Controllers";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppProvider>
+      <main className="main">
+        <PlayingField />
+        <Food />
+        <Snake />
+        <Controllers />
+      </main>
+    </AppProvider>
   );
 }
 
