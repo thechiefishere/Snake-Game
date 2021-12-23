@@ -54,7 +54,7 @@ const SnakeHead = () => {
       }
 
       checkIfFoodIsEaten();
-    }, 500);
+    }, 100);
     return () => {
       clearInterval(id);
     };

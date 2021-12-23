@@ -6,7 +6,7 @@ export const AppProvider = ({ children }) => {
   const [bodyParts, setBodyParts] = useState(3);
   const [bodyArr, setBodyArr] = useState([]);
   const [fieldDimensions, setFieldDimensions] = useState(0);
-  const [headPosition, setHeadPosition] = useState({});
+  // const [headPosition, setHeadPosition] = useState({});
   const [direction, setDirection] = useState("D");
   const [turningPoints, setTurningPoints] = useState([]);
   const [showFood, setShowFood] = useState(false);
@@ -38,39 +38,45 @@ export const AppProvider = ({ children }) => {
 
   const checkIfFoodIsEaten = () => {
     let collide = false;
+
     if (direction === "D") {
-      if (headPosition.bottom >= foodLocation.top) {
-        if (headPosition.left <= foodLocation.left) {
-          if (
-            headPosition.right >= foodLocation.left &&
-            headPosition.right < foodLocation.right
-          ) {
-            collide = true;
-          }
-        } else if (headPosition.left > foodLocation.left) {
-        }
+      if (
+        headPosition.right >= foodLocation.left &&
+        headPosition.left <= foodLocation.right &&
+        headPosition.bottom >= foodLocation.top &&
+        headPosition.top <= foodLocation.bottom
+      ) {
+        collide = true;
       }
     } else if (direction === "U") {
       if (
-        headPosition.top >= foodLocation.top + 20 &&
-        headPosition.left + 15 <= foodLocation.left + 20
+        headPosition.right >= foodLocation.left &&
+        headPosition.left <= foodLocation.right &&
+        headPosition.top <= foodLocation.bottom &&
+        headPosition.bottom >= foodLocation.top
+      ) {
+        collide = true;
+      }
+    } else if (direction === "R") {
+      if (
+        headPosition.top <= foodLocation.bottom &&
+        headPosition.bottom >= foodLocation.top &&
+        headPosition.right >= foodLocation.left &&
+        headPosition.left <= foodLocation.right
       ) {
         collide = true;
       }
     } else if (direction === "L") {
       if (
-        headPosition.left + 15 >= foodLocation.left &&
-        headPosition.top + 15
+        headPosition.top <= foodLocation.bottom &&
+        headPosition.bottom >= foodLocation.top &&
+        headPosition.left <= foodLocation.right &&
+        headPosition.right >= foodLocation.left
       ) {
+        collide = true;
       }
     }
-    if (
-      headPosition.top >= foodLocation.top &&
-      headPosition.top <= foodLocation.top + 20 &&
-      headPosition.top >= foodLocation.left &&
-      headPosition.top <= foodLocation.left + 20
-    ) {
-      console.log("I am in check eaten");
+    if (collide === true) {
       setFoodEaten(true);
       setShowFood(false);
     }

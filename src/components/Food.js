@@ -23,11 +23,11 @@ const Food = () => {
       const location = {
         top: top,
         left: left,
-        bottom: top + pos.width,
-        right: top + pos.height,
+        bottom: top + pos.height,
+        right: left + pos.width,
       };
       setFoodLocation(location);
-      console.log("foodLocation", foodRef.current.getBoundingClientRect());
+      // console.log("foodLocation", foodRef.current.getBoundingClientRect());
     }
   }, [showFood]);
 

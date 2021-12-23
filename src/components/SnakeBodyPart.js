@@ -52,7 +52,7 @@ const SnakeBodyPart = ({ index }) => {
           setTurningIndex((prev) => prev + 1);
         }
       }
-    }, 500);
+    }, 100);
     return () => {
       clearInterval(id);
     };
