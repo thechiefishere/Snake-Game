@@ -3,7 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 const AppContext = React.createContext();
 
 export const AppProvider = ({ children }) => {
-  const [bodyParts, setBodyParts] = useState(3);
+  const [bodyParts, setBodyParts] = useState(4);
   const [bodyArr, setBodyArr] = useState([]);
   const [fieldDimensions, setFieldDimensions] = useState(0);
   const [headPosition, setHeadPosition] = useState({});
@@ -22,7 +22,7 @@ export const AppProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (bodyParts > 3) {
+    if (bodyParts > 4) {
       setBodyArr((prev) => [...prev, bodyParts - 1]);
     }
   }, [bodyParts]);

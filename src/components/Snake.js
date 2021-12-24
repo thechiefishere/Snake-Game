@@ -1,5 +1,4 @@
 import React from "react";
-import SnakeHead from "./SnakeHead";
 import SnakeBodyPart from "./SnakeBodyPart";
 import { useGlobalContext } from "../context";
 
@@ -11,7 +10,6 @@ const Snake = () => {
       {bodyArr.map((arr, index) => {
         return <SnakeBodyPart key={index} index={index} />;
       })}
-      <SnakeHead />
     </section>
   );
 };

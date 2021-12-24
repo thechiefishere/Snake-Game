@@ -8,6 +8,8 @@ const SnakeBodyPart = ({ index }) => {
     bodyParts,
     newBodyPartDetails,
     setNewBodyPartDetails,
+    setHeadPosition,
+    checkIfFoodIsEaten,
   } = useGlobalContext();
   const [bodyPosition, setBodyPosition] = useState({});
   const [bodyDirection, setBodyDirection] = useState("D");
@@ -28,7 +30,6 @@ const SnakeBodyPart = ({ index }) => {
   useEffect(() => {
     const id = setInterval(() => {
       const pos = bodyRef.current.getBoundingClientRect();
-      // console.log("index", index, " pos is ", pos);
       let update = "";
       if (bodyDirection === "D" || bodyDirection === "U") {
         if (bodyDirection === "D") {
@@ -57,70 +58,33 @@ const SnakeBodyPart = ({ index }) => {
       }
 
       if (turningPoints.length > ref.current) {
-        // console.log("update is ", update);
-        // console.log("bodyRef ", bodyRef.current);
         const tPoint = turningPoints[ref.current];
         const arr = tPoint.split(" ");
         const tValue = arr[0];
         const tDirection = arr[1];
 
-        if (bodyDirection === "D" && pos.bottom >= parseInt(tValue)) {
-          if (pos.bottom > parseInt(tValue)) {
-            console.log("turningVal is ", parseInt(tValue));
-            console.log(
-              "index " + index + " Greater in D and Pos",
-              pos,
-              " and turningPoint is ",
-              turningPoints[ref.current],
-              " and update is ",
-              update
-            );
-          }
+        if (bodyDirection === "D" && pos.bottom === parseInt(tValue)) {
           setBodyDirection(tDirection);
           ref.current = ref.current + 1;
-        } else if (bodyDirection === "R" && pos.right >= parseInt(tValue)) {
-          if (pos.right > parseInt(tValue)) {
-            console.log("turningVal is ", parseInt(tValue));
-            console.log(
-              "index " + index + " Greater in R and Pos",
-              pos,
-              " and turningPoint is ",
-              turningPoints[ref.current],
-              " and update is ",
-              update
-            );
-          }
+        } else if (bodyDirection === "R" && pos.right === parseInt(tValue)) {
           setBodyDirection(tDirection);
           ref.current = ref.current + 1;
-        } else if (bodyDirection === "U" && pos.top <= parseInt(tValue)) {
-          if (pos.top < parseInt(tValue)) {
-            console.log("turningVal is ", parseInt(tValue));
-            console.log(
-              "index " + index + " Less in U and Pos",
-              pos,
-              " and turningPoint is ",
-              turningPoints[ref.current],
-              " and update is ",
-              update
-            );
-          }
+        } else if (bodyDirection === "U" && pos.top === parseInt(tValue)) {
           setBodyDirection(tDirection);
           ref.current = ref.current + 1;
-        } else if (bodyDirection === "L" && pos.left <= parseInt(tValue)) {
-          if (pos.left < parseInt(tValue)) {
-            console.log("turningVal is ", parseInt(tValue));
-            console.log(
-              "index " + index + " Less in L and Pos",
-              pos,
-              " and turningPoint is ",
-              turningPoints[ref.current],
-              " and update is ",
-              update
-            );
-          }
+        } else if (bodyDirection === "L" && pos.left === parseInt(tValue)) {
           setBodyDirection(tDirection);
           ref.current = ref.current + 1;
         }
+      }
+      if (index === 0) {
+        checkIfFoodIsEaten();
+        setHeadPosition({
+          top: pos.top,
+          bottom: pos.bottom,
+          left: pos.left,
+          right: pos.right,
+        });
       }
       if (index === bodyParts - 1) {
         const details = {
@@ -132,26 +96,26 @@ const SnakeBodyPart = ({ index }) => {
           bodyDirection: bodyDirection,
         };
         if (bodyDirection === "D") {
-          details.top = details.top - 1;
+          details.top = details.top - 13;
         } else if (bodyDirection === "U") {
-          details.top = details.top + 1;
+          details.top = details.top + 13;
         } else if (bodyDirection === "R") {
-          details.left = details.left - 1;
-          details.top = details.top - 1;
+          details.left = details.left - 13;
         } else if (bodyDirection === "L") {
-          details.left = details.left + 1;
-          details.top = details.top - 1;
+          details.left = details.left + 13;
         }
 
         setNewBodyPartDetails(details);
       }
-    }, 50);
+    }, 30);
     return () => {
       clearInterval(id);
     };
   }, [bodyPosition]);
 
-  return <div ref={bodyRef} className="bodypart"></div>;
+  return (
+    <div ref={bodyRef} className={`bodypart ${index === 0 && "head"}`}></div>
+  );
 };
 
 export default SnakeBodyPart;
