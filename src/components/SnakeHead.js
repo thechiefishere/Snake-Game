@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { useGlobalContext } from "../context";
 
 const SnakeHead = () => {
@@ -13,7 +13,7 @@ const SnakeHead = () => {
 
   useEffect(() => {
     const pos = headRef.current.getBoundingClientRect();
-    headRef.current.style.top = `${bodyParts * 15 + 250}px`;
+    headRef.current.style.top = `${(bodyParts + 1) * 15 + 250}px`;
     const position = {
       top: pos.top,
       left: pos.left,
@@ -29,9 +29,9 @@ const SnakeHead = () => {
       let update = "";
       if (direction === "D" || direction === "U") {
         if (direction === "D") {
-          update = pos.top + 5;
+          update = pos.top + 1;
         } else {
-          update = pos.top - 5;
+          update = pos.top - 1;
         }
         headRef.current.style.top = `${update}px`;
         setHeadPosition({
@@ -41,9 +41,9 @@ const SnakeHead = () => {
         });
       } else if (direction === "R" || direction === "L") {
         if (direction === "R") {
-          update = pos.left + 5;
+          update = pos.left + 1;
         } else {
-          update = pos.left - 5;
+          update = pos.left - 1;
         }
         headRef.current.style.left = `${update}px`;
         setHeadPosition({
@@ -54,7 +54,7 @@ const SnakeHead = () => {
       }
 
       checkIfFoodIsEaten();
-    }, 100);
+    }, 50);
     return () => {
       clearInterval(id);
     };

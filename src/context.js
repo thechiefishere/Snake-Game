@@ -6,17 +6,24 @@ export const AppProvider = ({ children }) => {
   const [bodyParts, setBodyParts] = useState(3);
   const [bodyArr, setBodyArr] = useState([]);
   const [fieldDimensions, setFieldDimensions] = useState(0);
-  // const [headPosition, setHeadPosition] = useState({});
+  const [headPosition, setHeadPosition] = useState({});
   const [direction, setDirection] = useState("D");
   const [turningPoints, setTurningPoints] = useState([]);
   const [showFood, setShowFood] = useState(false);
   const [foodEaten, setFoodEaten] = useState(true);
-  const [regulateFoodEaten, setRegulateFoodEaten] = useState(false);
   const [foodLocation, setFoodLocation] = useState(0);
+  const [collisionWithFood, setCollisionWithFood] = useState(false);
+  const [newBodyPartDetails, setNewBodyPartDetails] = useState({});
 
   useEffect(() => {
     for (let i = 0; i < bodyParts; i++) {
       setBodyArr((prev) => [...prev, i]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (bodyParts > 3) {
+      setBodyArr((prev) => [...prev, bodyParts - 1]);
     }
   }, [bodyParts]);
 
@@ -24,6 +31,7 @@ export const AppProvider = ({ children }) => {
     let id = "";
     if (foodEaten) {
       setFoodEaten(false);
+      setCollisionWithFood(false);
       id = setTimeout(() => {
         setShowFood(true);
       }, 6000);
@@ -36,8 +44,17 @@ export const AppProvider = ({ children }) => {
     };
   }, [foodEaten]);
 
+  useEffect(() => {
+    if (collisionWithFood === true && showFood === true) {
+      setFoodEaten(true);
+      setShowFood(false);
+      setBodyParts((prev) => prev + 1);
+      setCollisionWithFood(false);
+    }
+  }, [collisionWithFood]);
+
   const checkIfFoodIsEaten = () => {
-    let collide = false;
+    setCollisionWithFood(false);
 
     if (direction === "D") {
       if (
@@ -46,7 +63,7 @@ export const AppProvider = ({ children }) => {
         headPosition.bottom >= foodLocation.top &&
         headPosition.top <= foodLocation.bottom
       ) {
-        collide = true;
+        setCollisionWithFood(true);
       }
     } else if (direction === "U") {
       if (
@@ -55,7 +72,7 @@ export const AppProvider = ({ children }) => {
         headPosition.top <= foodLocation.bottom &&
         headPosition.bottom >= foodLocation.top
       ) {
-        collide = true;
+        setCollisionWithFood(true);
       }
     } else if (direction === "R") {
       if (
@@ -64,7 +81,7 @@ export const AppProvider = ({ children }) => {
         headPosition.right >= foodLocation.left &&
         headPosition.left <= foodLocation.right
       ) {
-        collide = true;
+        setCollisionWithFood(true);
       }
     } else if (direction === "L") {
       if (
@@ -73,12 +90,8 @@ export const AppProvider = ({ children }) => {
         headPosition.left <= foodLocation.right &&
         headPosition.right >= foodLocation.left
       ) {
-        collide = true;
+        setCollisionWithFood(true);
       }
-    }
-    if (collide === true) {
-      setFoodEaten(true);
-      setShowFood(false);
     }
   };
 
@@ -101,6 +114,8 @@ export const AppProvider = ({ children }) => {
         foodLocation,
         setFoodLocation,
         checkIfFoodIsEaten,
+        newBodyPartDetails,
+        setNewBodyPartDetails,
       }}
     >
       {children}

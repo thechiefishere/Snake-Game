@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useGlobalContext } from "../context";
 import {
   FaArrowCircleUp,
@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa";
 
 const Controllers = () => {
+  const addOne = useRef(1.5);
   const { setDirection, direction, setTurningPoints, headPosition } =
     useGlobalContext();
 
@@ -16,8 +17,19 @@ const Controllers = () => {
       <FaArrowCircleUp
         onClick={() => {
           if (direction != "U" && direction != "D") {
-            setTurningPoints((prev) => [...prev, `${headPosition.left} U`]);
+            console.log("addOne.current is ", addOne.current);
+            if (direction === "R") {
+              setTurningPoints((prev) => [...prev, `${headPosition.right} U`]);
+            } else {
+              setTurningPoints((prev) => [...prev, `${headPosition.left} U`]);
+            }
             setDirection("U");
+            if (addOne.current === 1.5) {
+              console.log("I enter here");
+              addOne.current = 0;
+            } else {
+              addOne.current = 1.5;
+            }
           }
         }}
         className="controll controllers-up"
@@ -25,8 +37,19 @@ const Controllers = () => {
       <FaArrowCircleRight
         onClick={() => {
           if (direction != "R" && direction != "L") {
-            setTurningPoints((prev) => [...prev, `${headPosition.top} R`]);
+            console.log("addOne.current is ", addOne.current);
+            if (direction === "D") {
+              setTurningPoints((prev) => [...prev, `${headPosition.bottom} R`]);
+            } else {
+              setTurningPoints((prev) => [...prev, `${headPosition.top} R`]);
+            }
             setDirection("R");
+            if (addOne.current === 1.5) {
+              console.log("I enter here");
+              addOne.current = 0;
+            } else {
+              addOne.current = 1.5;
+            }
           }
         }}
         className="controll controllers-right"
@@ -34,8 +57,19 @@ const Controllers = () => {
       <FaArrowCircleDown
         onClick={() => {
           if (direction != "D" && direction != "U") {
-            setTurningPoints((prev) => [...prev, `${headPosition.left} D`]);
+            console.log("addOne.current is ", addOne.current);
+            if (direction === "R") {
+              setTurningPoints((prev) => [...prev, `${headPosition.right} D`]);
+            } else {
+              setTurningPoints((prev) => [...prev, `${headPosition.left} D`]);
+            }
             setDirection("D");
+            if (addOne.current === 1.5) {
+              console.log("I enter here");
+              addOne.current = 0;
+            } else {
+              addOne.current = 1.5;
+            }
           }
         }}
         className="controll controllers-down"
@@ -43,8 +77,19 @@ const Controllers = () => {
       <FaArrowCircleLeft
         onClick={() => {
           if (direction != "L" && direction != "R") {
-            setTurningPoints((prev) => [...prev, `${headPosition.top} L`]);
+            console.log("addOne.current is ", addOne.current);
+            if (direction === "D") {
+              setTurningPoints((prev) => [...prev, `${headPosition.bottom} L`]);
+            } else {
+              setTurningPoints((prev) => [...prev, `${headPosition.top} L`]);
+            }
             setDirection("L");
+            if (addOne.current === 1.5) {
+              console.log("I enter here");
+              addOne.current = 0;
+            } else {
+              addOne.current = 1.5;
+            }
           }
         }}
         className="controll controllers-left"
