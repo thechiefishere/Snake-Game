@@ -16,7 +16,7 @@ const SnakeBodyPart = ({ index }) => {
     gameSpeed,
   } = useGlobalContext();
   const [bodyPosition, setBodyPosition] = useState({});
-  const [bodyDirection, setBodyDirection] = useState("D");
+  const bodyDirection = useRef("D");
   const ref = useRef(0);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const SnakeBodyPart = ({ index }) => {
       bodyRef.current.style.left = `${newBodyPartDetails.left}px`;
       bodyRef.current.style.right = `${newBodyPartDetails.right}px`;
       ref.current = newBodyPartDetails.ref;
-      setBodyDirection(newBodyPartDetails.bodyDirection);
+      bodyDirection.current = newBodyPartDetails.bodyDirection;
     }
   }, []);
 
@@ -36,8 +36,8 @@ const SnakeBodyPart = ({ index }) => {
       const id = setInterval(() => {
         const pos = bodyRef.current.getBoundingClientRect();
         let update = "";
-        if (bodyDirection === "D" || bodyDirection === "U") {
-          if (bodyDirection === "D") {
+        if (bodyDirection.current === "D" || bodyDirection.current === "U") {
+          if (bodyDirection.current === "D") {
             update = pos.top + 1;
           } else {
             update = pos.top - 1;
@@ -48,8 +48,11 @@ const SnakeBodyPart = ({ index }) => {
             top: update,
             bottom: update + pos.height,
           });
-        } else if (bodyDirection === "R" || bodyDirection === "L") {
-          if (bodyDirection === "R") {
+        } else if (
+          bodyDirection.current === "R" ||
+          bodyDirection.current === "L"
+        ) {
+          if (bodyDirection.current === "R") {
             update = pos.left + 1;
           } else {
             update = pos.left - 1;
@@ -68,17 +71,26 @@ const SnakeBodyPart = ({ index }) => {
           const tValue = arr[0];
           const tDirection = arr[1];
 
-          if (bodyDirection === "D" && pos.bottom === parseInt(tValue)) {
-            setBodyDirection(tDirection);
+          if (bodyDirection.current === "D" && pos.bottom >= parseInt(tValue)) {
+            bodyDirection.current = tDirection;
             ref.current = ref.current + 1;
-          } else if (bodyDirection === "R" && pos.right === parseInt(tValue)) {
-            setBodyDirection(tDirection);
+          } else if (
+            bodyDirection.current === "R" &&
+            pos.right >= parseInt(tValue)
+          ) {
+            bodyDirection.current = tDirection;
             ref.current = ref.current + 1;
-          } else if (bodyDirection === "U" && pos.top === parseInt(tValue)) {
-            setBodyDirection(tDirection);
+          } else if (
+            bodyDirection.current === "U" &&
+            pos.top <= parseInt(tValue)
+          ) {
+            bodyDirection.current = tDirection;
             ref.current = ref.current + 1;
-          } else if (bodyDirection === "L" && pos.left === parseInt(tValue)) {
-            setBodyDirection(tDirection);
+          } else if (
+            bodyDirection.current === "L" &&
+            pos.left <= parseInt(tValue)
+          ) {
+            bodyDirection.current = tDirection;
             ref.current = ref.current + 1;
           }
         }
@@ -99,15 +111,15 @@ const SnakeBodyPart = ({ index }) => {
             left: bodyPosition.left,
             right: bodyPosition.right,
             ref: ref.current,
-            bodyDirection: bodyDirection,
+            bodyDirection: bodyDirection.current,
           };
-          if (bodyDirection === "D") {
+          if (bodyDirection.current === "D") {
             details.top = details.top - 13;
-          } else if (bodyDirection === "U") {
+          } else if (bodyDirection.current === "U") {
             details.top = details.top + 13;
-          } else if (bodyDirection === "R") {
+          } else if (bodyDirection.current === "R") {
             details.left = details.left - 13;
-          } else if (bodyDirection === "L") {
+          } else if (bodyDirection.current === "L") {
             details.left = details.left + 13;
           }
 

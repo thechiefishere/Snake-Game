@@ -56,6 +56,9 @@ export const AppProvider = ({ children }) => {
           setGameSpeed((prev) => prev - 5);
         }
       }
+      if (gameSpeed <= 10) {
+        setGameSpeed(10);
+      }
     }
   }, [collisionWithFood]);
 
