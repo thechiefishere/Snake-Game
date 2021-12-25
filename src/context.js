@@ -14,6 +14,11 @@ export const AppProvider = ({ children }) => {
   const [foodLocation, setFoodLocation] = useState(0);
   const [collisionWithFood, setCollisionWithFood] = useState(false);
   const [newBodyPartDetails, setNewBodyPartDetails] = useState({});
+  const [collisionWithWall, setCollisionWithWall] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+  const [score, setScore] = useState(0);
+  const [playing, setPlaying] = useState(true);
+  const [gameSpeed, setGameSpeed] = useState(30);
 
   useEffect(() => {
     for (let i = 0; i < bodyParts; i++) {
@@ -28,20 +33,13 @@ export const AppProvider = ({ children }) => {
   }, [bodyParts]);
 
   useEffect(() => {
-    let id = "";
     if (foodEaten) {
       setFoodEaten(false);
       setCollisionWithFood(false);
-      id = setTimeout(() => {
+      const id = setTimeout(() => {
         setShowFood(true);
       }, 6000);
     }
-
-    return () => {
-      if (id) {
-        // clearTimeout(id);
-      }
-    };
   }, [foodEaten]);
 
   useEffect(() => {
@@ -49,7 +47,15 @@ export const AppProvider = ({ children }) => {
       setFoodEaten(true);
       setShowFood(false);
       setBodyParts((prev) => prev + 1);
+      setScore((prev) => prev + 10);
       setCollisionWithFood(false);
+      if (score > 0 && score % 20 === 0) {
+        if (score >= 90) {
+          setGameSpeed((prev) => prev - 2);
+        } else {
+          setGameSpeed((prev) => prev - 5);
+        }
+      }
     }
   }, [collisionWithFood]);
 
@@ -95,6 +101,38 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const checkWallCollision = () => {
+    if (direction === "D") {
+      if (headPosition.bottom >= fieldDimensions.bottom - 5) {
+        setCollisionWithWall(true);
+      }
+    } else if (direction === "U") {
+      if (headPosition.top <= fieldDimensions.top + 5) {
+        setCollisionWithWall(true);
+      }
+    } else if (direction === "R") {
+      if (headPosition.right >= fieldDimensions.right - 5) {
+        setCollisionWithWall(true);
+      }
+    } else if (direction === "L") {
+      if (headPosition.left <= fieldDimensions.left + 5) {
+        setCollisionWithWall(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (collisionWithWall) {
+      setGameOver(true);
+      setCollisionWithWall(false);
+    }
+  }, [collisionWithWall]);
+
+  const restart = () => {
+    setPlaying(false);
+    window.location.reload(false);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -116,6 +154,13 @@ export const AppProvider = ({ children }) => {
         checkIfFoodIsEaten,
         newBodyPartDetails,
         setNewBodyPartDetails,
+        checkWallCollision,
+        gameOver,
+        score,
+        playing,
+        setPlaying,
+        restart,
+        gameSpeed,
       }}
     >
       {children}
