@@ -8,7 +8,7 @@ import {
 } from "react-icons/fa";
 
 const Controllers = () => {
-  const { setDirection, direction, setTurningPoints, headPosition } =
+  const { setDirection, direction, setTurningPoints, headPosition, playing } =
     useGlobalContext();
 
   /**
@@ -21,6 +21,7 @@ const Controllers = () => {
     <section className="controllers">
       <FaArrowCircleUp
         onClick={() => {
+          if (!playing) return;
           if (direction != "U" && direction != "D") {
             if (direction === "R") {
               setTurningPoints((prev) => [
@@ -40,6 +41,7 @@ const Controllers = () => {
       />
       <FaArrowCircleRight
         onClick={() => {
+          if (!playing) return;
           if (direction != "R" && direction != "L") {
             if (direction === "D") {
               setTurningPoints((prev) => [
@@ -59,6 +61,7 @@ const Controllers = () => {
       />
       <FaArrowCircleDown
         onClick={() => {
+          if (!playing) return;
           if (direction != "D" && direction != "U") {
             if (direction === "R") {
               setTurningPoints((prev) => [
@@ -78,6 +81,7 @@ const Controllers = () => {
       />
       <FaArrowCircleLeft
         onClick={() => {
+          if (!playing) return;
           if (direction != "L" && direction != "R") {
             if (direction === "D") {
               setTurningPoints((prev) => [

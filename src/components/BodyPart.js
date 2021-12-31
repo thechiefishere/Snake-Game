@@ -19,12 +19,20 @@ const BodyPart = ({ index }) => {
   const [bodyPosition, setBodyPosition] = useState({});
   const bodyDirection = useRef("D");
   const turnRef = useRef(0);
+  const [bodyWidthAndHeight, setBodyWidthAndHeight] = useState(15);
+  let bodyTop = useRef(0);
+  let bodyLeft = useRef(0);
 
   /**
    * Effect that initializes bodyParts.
    */
   useEffect(() => {
-    bodyRef.current.style.top = `${(bodyParts - index) * 15 + 250}px`;
+    const top = (bodyParts - index) * 15 + 250;
+    const left = window.innerWidth / 2 - 7;
+    bodyRef.current.style.top = `${top}px`;
+    bodyRef.current.style.left = `${left}px`;
+    bodyTop.current = top;
+    bodyLeft.current = left;
 
     //Sets the positioning and other values of bodyParts
     //added after every food eating.
@@ -35,6 +43,8 @@ const BodyPart = ({ index }) => {
       bodyRef.current.style.right = `${newBodyPartDetails.right}px`;
       turnRef.current = newBodyPartDetails.ref;
       bodyDirection.current = newBodyPartDetails.bodyDirection;
+      bodyTop.current = newBodyPartDetails.bodyTop;
+      bodyLeft.current = newBodyPartDetails.bodyLeft;
     }
   }, []);
 
@@ -44,17 +54,21 @@ const BodyPart = ({ index }) => {
   useEffect(() => {
     if (playing && !gameOver) {
       const id = setInterval(() => {
-        const bodyPartBoundingRect = bodyRef.current.getBoundingClientRect();
-        updateBodyPartBoundingRect(bodyPartBoundingRect, bodyDirection.current);
+        const updatedTopAndLeft = updateBodyPartBoundingRect(
+          bodyTop.current,
+          bodyLeft.current,
+          bodyDirection.current
+        );
         makeBodyPartTurn(
-          bodyPartBoundingRect,
+          bodyTop.current,
+          bodyLeft.current,
           allTurningPoints,
           turnRef.current
         );
 
         if (index === 0) {
           checkHeadCollisions();
-          setUpdatedHeadPosition(bodyPartBoundingRect);
+          setUpdatedHeadPosition(bodyTop.current, bodyLeft.current);
         }
 
         if (index === bodyParts - 1) {
@@ -64,6 +78,8 @@ const BodyPart = ({ index }) => {
           );
           setNewBodyPartDetails(details);
         }
+        bodyTop.current = updatedTopAndLeft.top;
+        bodyLeft.current = updatedTopAndLeft.left;
       }, gameSpeed);
       return () => {
         clearInterval(id);
@@ -75,63 +91,61 @@ const BodyPart = ({ index }) => {
    * Move the bodypart from it's current position to the next position.
    * @param {The bounding rectangle of the body part to be updated.} bodyPartBoundingRect
    */
-  const updateBodyPartBoundingRect = (bodyPartBoundingRect, bodyDirection) => {
+  const updateBodyPartBoundingRect = (top, left, bodyDirection) => {
     let newPosition = "";
     if (bodyDirection === "D") {
-      newPosition = bodyPartBoundingRect.top + bodyMoveLength;
-      updateBodyPosition(bodyPartBoundingRect, "Top", newPosition);
+      newPosition = top += bodyMoveLength;
+      updateBodyPosition(top, "Top", newPosition);
     } else if (bodyDirection === "U") {
-      newPosition = bodyPartBoundingRect.top - bodyMoveLength;
-      updateBodyPosition(bodyPartBoundingRect, "Top", newPosition);
+      newPosition = top -= bodyMoveLength;
+      updateBodyPosition(bodyWidthAndHeight, "Top", newPosition);
     } else if (bodyDirection === "R") {
-      newPosition = bodyPartBoundingRect.left + bodyMoveLength;
-      updateBodyPosition(bodyPartBoundingRect, "Left", newPosition);
+      newPosition = left += bodyMoveLength;
+      updateBodyPosition(left, "Left", newPosition);
     } else if (bodyDirection === "L") {
-      newPosition = bodyPartBoundingRect.left - bodyMoveLength;
-      updateBodyPosition(bodyPartBoundingRect, "Left", newPosition);
+      newPosition = left -= bodyMoveLength;
+      updateBodyPosition(bodyWidthAndHeight, "Left", newPosition);
     }
+
+    return {
+      top: top,
+      left: left,
+    };
   };
 
   /**
-   * Set body position to its new bounding rectangle
-   * @param {The bounding rectange of the body part} bodyPartBoundingRect
+   * Set body position to its new top or left
+   * @param {Height or width of the bodypart} width
    * @param {It is either the top or left side that needs to
    * be updated} sideToUpdate
    * @param {The new position to place the sideToUpdate} newPosition
    */
-  const updateBodyPosition = (
-    bodyPartBoundingRect,
-    sideToUpdate,
-    newPosition
-  ) => {
+  const updateBodyPosition = (width, sideToUpdate, newPosition) => {
     if (sideToUpdate === "Top") {
       bodyRef.current.style.top = `${newPosition}px`;
       setBodyPosition({
         ...bodyPosition,
         top: newPosition,
-        bottom: newPosition + bodyPartBoundingRect.height,
+        bottom: newPosition + width,
       });
     } else {
       bodyRef.current.style.left = `${newPosition}px`;
       setBodyPosition({
         ...bodyPosition,
         left: newPosition,
-        right: newPosition + bodyPartBoundingRect.width,
+        right: newPosition + width,
       });
     }
   };
 
   /**
    * Changes body part direction.
-   * @param {The bounding rectangle of the bodypart} bodyPartBoundingRect
+   * @param {Top dimension of the bodyPart} top
+   * @param {Left dimension of the bodyPart} left
    * @param {An array of all points (e.g "122 R") where direction was changed} allTurningPoints
    * @param {the index of the last turn made by the body part} indexOfLastTurn
    */
-  const makeBodyPartTurn = (
-    bodyPartBoundingRect,
-    allTurningPoints,
-    indexOfLastTurn
-  ) => {
+  const makeBodyPartTurn = (top, left, allTurningPoints, indexOfLastTurn) => {
     if (allTurningPoints.length > indexOfLastTurn) {
       const tPoint = allTurningPoints[indexOfLastTurn];
       const arr = tPoint.split(" ");
@@ -140,26 +154,20 @@ const BodyPart = ({ index }) => {
 
       if (
         (bodyDirection.current === "D") &
-        (bodyPartBoundingRect.bottom >= parseInt(tValue))
+        (top + bodyWidthAndHeight >= parseInt(tValue))
       ) {
         bodyDirection.current = tDirection;
         turnRef.current = indexOfLastTurn + 1;
       } else if (
         bodyDirection.current === "R" &&
-        bodyPartBoundingRect.right >= parseInt(tValue)
+        left + bodyWidthAndHeight >= parseInt(tValue)
       ) {
         bodyDirection.current = tDirection;
         turnRef.current = indexOfLastTurn + 1;
-      } else if (
-        bodyDirection.current === "U" &&
-        bodyPartBoundingRect.top <= parseInt(tValue)
-      ) {
+      } else if (bodyDirection.current === "U" && top <= parseInt(tValue)) {
         bodyDirection.current = tDirection;
         turnRef.current = indexOfLastTurn + 1;
-      } else if (
-        bodyDirection.current === "L" &&
-        bodyPartBoundingRect.left <= parseInt(tValue)
-      ) {
+      } else if (bodyDirection.current === "L" && left <= parseInt(tValue)) {
         bodyDirection.current = tDirection;
         turnRef.current = indexOfLastTurn + 1;
       }
@@ -177,14 +185,15 @@ const BodyPart = ({ index }) => {
 
   /**
    * Updates headPosition in context.js
-   * @param {The boounding rect of the head(index 0)} bodyPartBoundingRect
+   * @param {Top dimension of the head(index 0)} top
+   * @param {Left dimension of the head(index 0)} left
    */
-  const setUpdatedHeadPosition = (bodyPartBoundingRect) => {
+  const setUpdatedHeadPosition = (top, left) => {
     setHeadPosition({
-      top: bodyPartBoundingRect.top,
-      bottom: bodyPartBoundingRect.bottom,
-      left: bodyPartBoundingRect.left,
-      right: bodyPartBoundingRect.right,
+      top: top,
+      bottom: top + bodyWidthAndHeight,
+      left: left,
+      right: left + bodyWidthAndHeight,
     });
   };
 
@@ -203,15 +212,21 @@ const BodyPart = ({ index }) => {
       right: bodyPosition.right,
       ref: turnRef.current,
       bodyDirection: bodyDirection.current,
+      bodyTop: bodyTop.current,
+      bodyLeft: bodyLeft.current,
     };
     if (bodyDirection.current === "D") {
       details.top = details.top - 13;
+      details.bodyTop -= 13;
     } else if (bodyDirection.current === "U") {
       details.top = details.top + 13;
+      details.bodyTop += 13;
     } else if (bodyDirection.current === "R") {
       details.left = details.left - 13;
+      details.bodyLeft -= 13;
     } else if (bodyDirection.current === "L") {
       details.left = details.left + 13;
+      details.bodyLeft += 13;
     }
 
     return details;
