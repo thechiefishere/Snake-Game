@@ -18,8 +18,9 @@ describe("What happens in <App />", () => {
   test("what happens after play button is clicked", async () => {
     userEvent.click(screen.getByTestId("play"));
     expect(screen.getByTestId("pause")).toBeInTheDocument();
-    await waitFor(() =>
-      expect(screen.getByTestId("bodyPart0")).toHaveStyle(`top: 1px`)
+    await waitFor(
+      () => expect(screen.getByTestId("bodyPart0")).toHaveStyle(`top: 311px`),
+      { timeout: 30 }
     );
   });
 });
