@@ -6,6 +6,9 @@ const Food = () => {
   const { showFood, fieldDimensions, setFoodLocation, playing, gameOver } =
     useGlobalContext();
 
+  /**
+   * Effect that randomly positions food.
+   */
   useEffect(() => {
     if (showFood) {
       let top =
@@ -30,12 +33,12 @@ const Food = () => {
       foodRef.current.style.top = `${top}px`;
       foodRef.current.style.left = `${left}px`;
 
-      const pos = foodRef.current.getBoundingClientRect();
+      const foodBoundingRect = foodRef.current.getBoundingClientRect();
       const location = {
         top: top,
         left: left,
-        bottom: top + pos.height,
-        right: left + pos.width,
+        bottom: top + foodBoundingRect.height,
+        right: left + foodBoundingRect.width,
       };
       setFoodLocation(location);
     }

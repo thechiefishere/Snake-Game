@@ -17,21 +17,33 @@ export const AppProvider = ({ children }) => {
   const [collisionWithWall, setCollisionWithWall] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
   const [gameSpeed, setGameSpeed] = useState(30);
+  const [bodyMoveLength, setBodyMoveLength] = useState(1);
 
+  /**
+   * Effect that initializes bodyArr.
+   * bodyArr is used to loop through the amounts of bodyPart in JSX.
+   * e.g bodyArr.map()
+   */
   useEffect(() => {
     for (let i = 0; i < bodyParts; i++) {
       setBodyArr((prev) => [...prev, i]);
     }
   }, []);
 
+  /**
+   * Effect that updates bodyArr each time food is eaten.
+   */
   useEffect(() => {
     if (bodyParts > 4) {
       setBodyArr((prev) => [...prev, bodyParts - 1]);
     }
   }, [bodyParts]);
 
+  /**
+   * Effect that runs after food is eaten.
+   */
   useEffect(() => {
     if (foodEaten) {
       setFoodEaten(false);
@@ -42,6 +54,9 @@ export const AppProvider = ({ children }) => {
     }
   }, [foodEaten]);
 
+  /**
+   * Effect that runs whenever there is a collision with food.
+   */
   useEffect(() => {
     if (collisionWithFood === true && showFood === true) {
       setFoodEaten(true);
@@ -62,6 +77,9 @@ export const AppProvider = ({ children }) => {
     }
   }, [collisionWithFood]);
 
+  /**
+   * Checks if snake has eaten food.
+   */
   const checkIfFoodIsEaten = () => {
     setCollisionWithFood(false);
 
@@ -104,6 +122,9 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Checks if snake collided with wall.
+   */
   const checkWallCollision = () => {
     if (direction === "D") {
       if (headPosition.bottom >= fieldDimensions.bottom - 5) {
@@ -124,6 +145,10 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Effect that triggers gameOver whenever there is
+   * collision with wall.
+   */
   useEffect(() => {
     if (collisionWithWall) {
       setGameOver(true);
@@ -131,6 +156,9 @@ export const AppProvider = ({ children }) => {
     }
   }, [collisionWithWall]);
 
+  /**
+   * Restarts game by reloading page.
+   */
   const restart = () => {
     setPlaying(false);
     window.location.reload(false);
@@ -164,6 +192,8 @@ export const AppProvider = ({ children }) => {
         setPlaying,
         restart,
         gameSpeed,
+        bodyMoveLength,
+        setBodyMoveLength,
       }}
     >
       {children}

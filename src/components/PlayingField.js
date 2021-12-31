@@ -7,13 +7,16 @@ const PlayingField = () => {
   const { setFieldDimensions, gameOver, score, playing, setPlaying, restart } =
     useGlobalContext();
 
+  /**
+   * Effect that sets fieldDimensions in context.js
+   */
   useEffect(() => {
-    const pos = fieldRef.current.getBoundingClientRect();
+    const fieldBoundingRect = fieldRef.current.getBoundingClientRect();
     const dimensions = {
-      top: pos.top,
-      bottom: pos.bottom,
-      left: pos.left,
-      right: pos.right,
+      top: fieldBoundingRect.top,
+      bottom: fieldBoundingRect.bottom,
+      left: fieldBoundingRect.left,
+      right: fieldBoundingRect.right,
     };
     setFieldDimensions(dimensions);
   }, []);
@@ -22,9 +25,17 @@ const PlayingField = () => {
     <section ref={fieldRef} className="field">
       <h2 className="score">Score: {score}</h2>
       {playing ? (
-        <FaPause className="playpause" onClick={() => setPlaying(false)} />
+        <FaPause
+          data-testid="pause"
+          className="playpause"
+          onClick={() => setPlaying(false)}
+        />
       ) : (
-        <FaPlay className="playpause" onClick={() => setPlaying(true)} />
+        <FaPlay
+          data-testid="play"
+          className="playpause"
+          onClick={() => setPlaying(true)}
+        />
       )}
       {gameOver && (
         <div className="gameover">

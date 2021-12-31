@@ -11,6 +11,12 @@ const Controllers = () => {
   const { setDirection, direction, setTurningPoints, headPosition } =
     useGlobalContext();
 
+  /**
+   * Arrows changes direction of snake by updating
+   * snake turningPoints.
+   * Direction can not be changed from a side to its
+   * opposite i.e up to down.
+   */
   return (
     <section className="controllers">
       <FaArrowCircleUp

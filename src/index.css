@@ -11,32 +11,6 @@
   color: red;
 }
 
-.body {
-  position: relative;
-}
-
-.head {
-  position: absolute;
-  left: 50%;
-  width: 15px;
-  height: 15px;
-  background-color: red;
-  border-radius: 50%;
-}
-.head-x {
-  padding: 3px 4px;
-}
-.head-y {
-  padding: 4px 5px;
-  display: flex;
-}
-.head-eye {
-  background-color: #fff;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-}
-
 .bodypart {
   position: absolute;
   left: 50%;
