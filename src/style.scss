@@ -13,6 +13,10 @@ $snake-color: red;
   color: $snake-color;
 }
 
+body {
+  position: relative;
+}
+
 .bodypart {
   position: absolute;
   // left: 50%;

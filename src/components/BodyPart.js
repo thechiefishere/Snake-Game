@@ -33,6 +33,14 @@ const BodyPart = ({ index }) => {
     bodyRef.current.style.left = `${left}px`;
     bodyTop.current = top;
     bodyLeft.current = left;
+    if (index === 0) {
+      setHeadPosition({
+        top: top,
+        bottom: top + bodyWidthAndHeight,
+        left: left,
+        right: left + bodyWidthAndHeight,
+      });
+    }
 
     //Sets the positioning and other values of bodyParts
     //added after every food eating.
@@ -92,6 +100,9 @@ const BodyPart = ({ index }) => {
    * @param {The bounding rectangle of the body part to be updated.} bodyPartBoundingRect
    */
   const updateBodyPartBoundingRect = (top, left, bodyDirection) => {
+    if (index === 0) {
+      console.log("top is", top);
+    }
     let newPosition = "";
     if (bodyDirection === "D") {
       newPosition = top += bodyMoveLength;

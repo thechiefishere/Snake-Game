@@ -5,8 +5,8 @@ const AppContext = React.createContext();
 export const AppProvider = ({ children }) => {
   const [bodyParts, setBodyParts] = useState(4);
   const [bodyArr, setBodyArr] = useState([]);
-  const [fieldDimensions, setFieldDimensions] = useState(0);
-  const [headPosition, setHeadPosition] = useState({});
+  const [fieldDimensions, setFieldDimensions] = React.useState(0);
+  const [headPosition, setHeadPosition] = React.useState(0);
   const [direction, setDirection] = useState("D");
   const [turningPoints, setTurningPoints] = useState([]);
   const [showFood, setShowFood] = useState(false);

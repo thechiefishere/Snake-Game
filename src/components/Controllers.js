@@ -38,6 +38,7 @@ const Controllers = () => {
           }
         }}
         className="controll controllers-up"
+        data-testid="arrowUp"
       />
       <FaArrowCircleRight
         onClick={() => {
@@ -58,6 +59,7 @@ const Controllers = () => {
           }
         }}
         className="controll controllers-right"
+        data-testid="arrowRight"
       />
       <FaArrowCircleDown
         onClick={() => {
@@ -78,6 +80,7 @@ const Controllers = () => {
           }
         }}
         className="controll controllers-down"
+        data-testid="arrowDown"
       />
       <FaArrowCircleLeft
         onClick={() => {
@@ -98,6 +101,7 @@ const Controllers = () => {
           }
         }}
         className="controll controllers-left"
+        data-testid="arrowLeft"
       />
     </section>
   );

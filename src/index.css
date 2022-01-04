@@ -11,6 +11,10 @@
   color: red;
 }
 
+body {
+  position: relative;
+}
+
 .bodypart {
   position: absolute;
   width: 15px;
