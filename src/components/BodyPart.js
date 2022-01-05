@@ -100,9 +100,6 @@ const BodyPart = ({ index }) => {
    * @param {The bounding rectangle of the body part to be updated.} bodyPartBoundingRect
    */
   const updateBodyPartBoundingRect = (top, left, bodyDirection) => {
-    if (index === 0) {
-      console.log("top is", top);
-    }
     let newPosition = "";
     if (bodyDirection === "D") {
       newPosition = top += bodyMoveLength;

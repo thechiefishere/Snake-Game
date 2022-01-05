@@ -18,38 +18,16 @@ describe("What happens in <App />", () => {
   });
 
   describe("changes when play button is clicked", () => {
-    // beforeEach(() => {
-    //   user.click(screen.getByTestId("play"));
-    // });
-    test("what happens after play button is clicked", async () => {
+    beforeEach(() => {
       user.click(screen.getByTestId("play"));
-      expect(screen.getByTestId("pause")).toBeInTheDocument();
-      // expect(screen.getByTestId("bodyPart0")).toHaveStyle(`top: 310px`);
-      await waitFor(
-        () => expect(screen.getByTestId("bodyPart0")).toHaveStyle(`top: 312px`),
-        { timeout: 200 }
-      );
-      // await waitFor(
-      //   () => expect(screen.getByTestId("bodyPart0")).toHaveStyle(`top: 314px`),
-      //   { timeout: 120 }
-      // );
     });
-
-    // test("that right arrow changes snake direction to the right", async () => {
-    //   expect(screen.getByTestId("bodyPart0")).toHaveStyle("left: 505px");
-    //   await waitFor(
-    //     () => expect(screen.getByTestId("bodyPart0")).toHaveStyle("top: 311px"),
-    //     { timeout: 240 }
-    //   );
-    //   expect(screen.getByTestId("arrowRight")).toBeInTheDocument();
-    //   user.click(screen.getByTestId("arrowRight"));
-    //   // expect(screen.getByTestId("bodyPart0")).toHaveStyle("left: 506px");
-    //   // await waitFor(
-    //   //   () =>
-    //   //     expect(screen.getByTestId("bodyPart0")).toHaveStyle("left: 506px"),
-    //   //   { timeout: 300 }
-    //   // );
-    //   // screen.getByRole("");
-    // });
+    test("that snake moves", async () => {
+      expect(screen.getByTestId("pause")).toBeInTheDocument();
+      await waitFor(
+        () =>
+          expect(screen.getByTestId("bodyPart0")).not.toHaveStyle(`top: 310px`),
+        { timeout: 40, interval: 30 }
+      );
+    });
   });
 });
